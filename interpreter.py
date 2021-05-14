@@ -1,5 +1,8 @@
 import sys, os
 
+# returns whether file exists at given path
+def file_exists(path): return os.path.exists(path)
+
 # attributes
 vars = 256
 
@@ -8,8 +11,27 @@ varlist = []
 for i in range(vars): varlist.append(0)
 pointer = 0
 
-# returns whether file exists at given path
-def file_exists(path): return os.path.exists(path)
+# starts an if statement
+def if_start():
+    global pointer, index
+    if varlist[pointer] != 0: return
+    opens = 1
+    index += 1
+    while opens > 0:
+        if program[index] == '[': opens += 1
+        elif program[index] == ']': opens -= 1
+        index += 1
+
+# ends an if statement
+def if_end():
+    global pointer, index
+    if varlist[pointer] == 0: return
+    opens = -1
+    index -= 1
+    while opens < 0:
+        if program[index] == '[': opens += 1
+        elif program[index] == ']': opens -= 1
+        index -= 1
 
 # parses given character
 def parse(ch):
@@ -18,8 +40,12 @@ def parse(ch):
     elif ch == '>': pointer = 0 if pointer == vars - 1 else pointer + 1
     elif ch == '-': varlist[pointer] -= 1
     elif ch == '+': varlist[pointer] += 1
+    elif ch == '*': varlist[pointer] <<= 1
+    elif ch == '/': varlist[pointer] >>= 2
     elif ch == '.': print(chr(varlist[pointer]), end='')
     elif ch == ':': print(varlist[pointer])
+    elif ch == '[': if_start()
+    elif ch == ']': if_end()
     else: varlist[pointer] = ord(ch)
 
 # get program args
@@ -44,5 +70,9 @@ program = file.read()
 file.close()
 
 # parse each character in program
-for ch in program:
+index = 0
+leng = len(program)
+while index < leng:
+    ch = program[index]
     parse(ch)
+    index += 1
