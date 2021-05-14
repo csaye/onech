@@ -20,6 +20,7 @@ def parse(ch):
     elif ch == '+': varlist[pointer] += 1
     elif ch == '.': print(chr(varlist[pointer]), end='')
     elif ch == ':': print(varlist[pointer])
+    else: varlist[pointer] = ord(ch)
 
 # get program args
 args = sys.argv
